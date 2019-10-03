@@ -1,6 +1,6 @@
 ---
-title: "Fundamentals of Data Wrangling and Analysis Examples"
-author: "R for the Rest of Us"
+title: "Data Wrangling and Analysis Examples"
+author: "David Keyes // R for the Rest of Us"
 output: 
     html_document:
         css: slides/style.css
@@ -18,18 +18,52 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load Packages
 
-Let's load the `tidyverse` package.  
+Let's load the packages we need. These include `tidyverse` (especially the `dplyr` package) and `janitor`. 
 
 ```{r}
 library(tidyverse)
+library(janitor)
+library(skimr)
+```
+
+# clean_names
+
+```{r}
+bad_names <- read_csv("data/badnames.csv")
+
+bad_names
+```
+
+With the `bad_names` data frame, we have to use back tick (`) before and after variable names with spaces in them. Also, RStudio doesn't autocomplete the variable names, which is a pain!
+
+```{r}
+bad_names %>% 
+  skim(`Age Decade`)
+```
+
+We can use `clean_names` as follows:
+
+```{r}
+good_names <- bad_names %>% 
+  clean_names()
+
+good_names
+```
+
+Variable names are much easier to type now! And RStudio autocompletes them, which is super handy.
+
+```{r}
+good_names %>% 
+  skim(age_decade)
 ```
 
 # Import NHANES Data
 
-Let's import our data using `read_csv`. Note that the NHANES data is in the data directory so we need to include that.
+Let's import our data using `read_csv`. Note that the NHANES data is in the data directory so we need to include that. Then, let's use clean_names to make the variable names easy to work with.
 
 ```{r}
-nhanes <- read_csv("data/nhanes.csv")
+nhanes <- read_csv("data/nhanes.csv") %>% 
+  clean_names()
 ```
 
 Let's see what our data looks like.
@@ -68,6 +102,33 @@ nhanes %>%
 ```
 
 
+Used within `select`, the `contains` function selects variable with certain text in the variable name:
+
+
+```{r}
+nhanes %>%
+  select(contains("age"))
+```
+
+```{r}
+nhanes %>%
+  select(contains("phys"))
+```
+
+
+See also `starts_with` and `ends_with`.
+
+```{r}
+nhanes %>% 
+  select(starts_with("days"))
+```
+
+```{r}
+nhanes %>% 
+  select(ends_with("days"))
+```
+
+
 We can drop variables using the -var format:
 
 
@@ -99,7 +160,6 @@ nhanes %>%
   mutate(country = "United States") %>% 
   select(country)
 ```
-
 
 Create a **new variable based on other variables**
 
@@ -138,6 +198,23 @@ tibble::tribble(
 ```
 
 
+## Logical operators
+
+With logical operators, we can create complex filters (e.g. keep only those who say their health is "good", "very good", or "excellent").
+
+```{r echo = FALSE}
+
+tibble::tribble(
+  ~Operator, ~Description, ~Usage,
+  "&", "and", "x & y",
+  "|", "or", "x | y",
+  # "xor", "exactly x or y", "xor(x, y)",
+  "!", "not", "!x"
+)
+
+```
+
+
 
 # filter
 
@@ -164,21 +241,35 @@ nhanes %>%
 
 
 
-We can use `%in%` to only include responses that much a group. 
+We can combine comparisons and logical operators.
 
 ```{r}
 nhanes %>% 
-  filter(health_gen %in% c("Good", "Vgood", "Excellent")) %>% 
+  filter(health_gen == "Good" | health_gen == "Vgood" | health_gen == "Excellent") %>%
   select(health_gen)
 ```
 
 
-We can chain together multiple `filter` functions. 
+We can use `%in%` to collapse multiple comparisons into one.
 
 ```{r}
 nhanes %>% 
-  filter(gender == "male") %>% 
-  filter(health_gen %in% c("Good", "Vgood", "Excellent")) %>% 
+  filter(health_gen %in% c("Good", "Vgood", "Excellent")) %>%
+  select(health_gen)
+```
+
+We can chain together multiple `filter` functions. Doing it this way, we don't have create complex logic in one line.
+
+```{r}
+nhanes %>% 
+  filter(gender == "male" & (health_gen == "Good" | health_gen == "Vgood" | health_gen == "Excellent")) %>%
+  select(gender, health_gen)
+```
+
+```{r}
+nhanes %>% 
+  filter(gender == "male") %>%
+  filter(health_gen %in% c("Good", "Vgood", "Excellent")) %>%
   select(gender, health_gen)
 ```
 
@@ -189,6 +280,26 @@ We can use `<`, `>`, `<=`, and `=>` for numeric data.
 nhanes %>% 
   filter(age >= 50) %>% 
   select(age)
+```
+
+
+We can drop `NAs` with `!is.na` 
+
+```{r}
+nhanes %>% 
+  filter(age > 50) %>% 
+  filter(!is.na(marital_status)) %>%
+  select(age, marital_status)
+```
+
+
+We can also drop `NAs` with `drop_na`
+
+```{r}
+nhanes %>% 
+  filter(age > 50) %>% 
+  drop_na(marital_status) %>%
+  select(age, marital_status)
 ```
 
 
@@ -244,8 +355,7 @@ nhanes %>%
   summarize(mean_days_phys_active = mean(phys_active_days,
                                          na.rm = TRUE),
             median_days_phys_active = median(phys_active_days,
-                                             na.rm = TRUE),
-            number_of_responses = n())
+                                             na.rm = TRUE))
 ```
 
 
@@ -276,6 +386,55 @@ nhanes %>%
 ```
 
 
+## count
+
+If we just want to count the number of things per group, we can use `count`.
+
+
+```{r}
+nhanes %>% 
+  count(age_decade)
+```
+
+We can also count by multiple groups.
+
+```{r}
+nhanes %>% 
+  count(age_decade, gender) %>% 
+  drop_na(age_decade)
+```
+
+
+# arrange
+
+![](slides/images/arrange.png)
+
+With `arrange`, we can reorder rows in a data frame based on the values of one or more variables. R arranges in ascending order by default.
+
+```{r}
+nhanes %>% 
+  arrange(age)
+```
+
+We can also arrange in descending order using `desc()`.
+
+```{r}
+nhanes %>% 
+  arrange(desc(age))
+```
+
+We often use `arrange` at the end of chains to display things in order.
+
+```{r}
+nhanes %>% 
+  group_by(gender, age_decade) %>%
+  summarize(mean_active_days = mean(phys_active_days,
+                                    na.rm = TRUE)) %>% 
+  drop_na(age_decade) %>% 
+  arrange(desc(mean_active_days))
+```
+
+
 
 # Create new data frames
 
@@ -302,7 +461,107 @@ female_height_by_age <- nhanes %>%
   mutate(height_inches = height / 2.54) %>% 
   group_by(age_decade) %>% 
   summarize(mean_height_inches = mean(height_inches,
-                                    na.rm = TRUE)) 
+                                    na.rm = TRUE)) %>% 
+  drop_na(age_decade)
 ```
+
+
+```{r}
+female_height_inches_by_age
+```
+
+# Crosstabs
+
+The `tabyl` function in the `janitor` package is mostly used for crosstabs, but you can use it to do frequencies.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade)
+```
+
+To do a crosstab, you just add another variable.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) 
+```
+
+
+`janitor` has a set of functions that all start with `adorn_` that add a number of things to our crosstabs. We call them after `tabyl`. For example, `adorn_totals`.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) %>% 
+  adorn_totals(where = c("row", "col"))
+```
+
+
+We can add `adorn_percentages` to add percentages.
+
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  adorn_percentages()
+```
+
+
+
+We can then format these percentages using `adorn_pct_formatting`.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) %>% 
+  adorn_totals(where = c("row", "col")) %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting(digits = 0,
+                       rounding = "half up") 
+```
+
+
+
+If we want to include the n alongside percentages, we can use `adorn_ns`.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting(digits = 0,
+                       rounding = "half up") %>% 
+  adorn_ns()
+```
+
+
+
+We can add titles to our crosstabs using `adorn_title`. 
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  adorn_title(placement = "combined")
+```
+
+
+
+
+We can also do three (or more) way crosstabs automatically by adding more variables to the `tabyl` function.
+
+```{r}
+nhanes %>% 
+  tabyl(age_decade, gender, education) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting() %>% 
+  adorn_ns() %>% 
+  adorn_title(placement = "combined")
+
+```
+
 
 

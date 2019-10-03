@@ -17,15 +17,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load Packages
 
-Load the `tidyverse` package. 
+Let's load the packages we need. These include `tidyverse` (especially the `dplyr` package) and `janitor`. 
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-# Import NHANES Data
+# Import Data
 
-Import the NHANES data to a data frame called `nhanes`. 
+Import your data to a data frame called TK. 
 
 ```{r}
 # YOUR CODE HERE
@@ -45,8 +45,6 @@ Use `select` to show just the `marital_status` variable.
 # YOUR CODE HERE
 ```
 
-
-
 We can also use `select` for multiple variables. 
 
 Use `select` to show `marital_status` and `education`.
@@ -61,6 +59,25 @@ We can `select` a range of columns using the var1:var2 pattern. `select` all the
 ```{r}
 # YOUR CODE HERE
 ```
+
+Used within `select`, the `contains` function selects variable with certain text in the variable name. 
+
+Use the `contains` function to select variables that ask how many days in the last 30 days the respondent had bad physical and mental health (you should be able to figure out which variables these are from the names). 
+
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+Used within `select`, the `starts_with` function selects variable with certain text in the variable name. 
+
+Use the `starts_with` function to select variables that start with the letter h.
+
+```{r}
+# YOUR CODE HERE
+```
+
 
 We can drop variables using the -var format. Drop the `education` variable.
 
@@ -198,20 +215,148 @@ Use `group_by` for `gender` and `work` (whether or not respondents are working) 
 # YOUR CODE HERE
 ```
 
+## count
 
-# Create a new data frame
+If we just want to count the number of things per group, we can use `count`.
 
-Sometimes you want to save the results of your work to a new data frame. 
+Use `count` to show the number of responses by highest level of education completed (`education`).
 
-Create a chain that starts with your `nhanes` data frame, does the following, and saves the result to a new data frame called `mental_health_over_30`:
-
-1. Uses `filter` to only include those age 30 or older
-2. Uses `group_by` to create a male and female group
-3. Uses `summarize` to calculate a new variable called `mean_bad_mental_health_days` for males and females
 
 ```{r}
 # YOUR CODE HERE
 ```
 
+
+
+We can also count by multiple groups.
+
+Use `count` to show the number of responses for `education` and `phys_active`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+
+# arrange
+
+![](slides/images/arrange.png)
+
+With `arrange`, we can reorder rows in a data frame based on the values of one or more variables. R arranges in ascending order by default.
+
+Use `count` to show the number of responses by education level. Then, use `arrange` to order by the number of responses.
+
+```{r}
+# YOUR CODE HERE
+```
+
+We can also arrange in descending order using `desc`.
+
+Do the same thing as above, but put it in descending order using `desc`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+We often use `arrange` at the end of chains to display things in order.
+
+Create a chain that does the following:
+
+1. Uses `filter` to only include those age 30 or older
+2. Uses `group_by` to create a male and female group
+3. Uses `summarize` to calculate a new variable called `mean_bad_mental_health_days` for males and females
+4. Uses `mutate` to round `mean_bad_mental_health_days` to one decimal place
+5. Uses `arrange` to put `mean_bad_mental_health_days` in descending order
+
+```{r}
+# YOUR CODE HERE
+```
+
+# Create a new data frame
+
+Sometimes you want to save the results of your work to a new data frame. 
+
+Copy the code above and save it to a new data frame called `mental_health_over_30`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+# Crosstabs
+
+Sometimes you want your results in a crosstab. We can use the `tabyl` function in `janitor` package to make crosstabs automatically.
+
+Create a crosstab of `gender` and `health_gen`. 
+
+
+```{r}
+# YOUR CODE HERE
+```
+
+Add a `drop_na` before your line with `tabyl` to get rid of all NAs.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+`janitor` has a set of functions that all start with `adorn_` that add a number of things to our crosstabs. We call them after `tabyl`. For example, `adorn_totals`.
+
+Use the code above and then add totals using `adorn_totals` in the rows and columns.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+We can add `adorn_percentages` to add percentages.
+
+Use the code above and then add percentages using `adorn_percentages`.
+
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+
+We can then format these percentages using `adorn_pct_formatting`.
+
+Use the code above and then format the percentages using `adorn_pct_formatting`. Add arguments so that the percentages are rounded to 1 digit. Note that R uses the "half to even" rounding method by default so if you want to round, say, 14.5 to 15 you must use the `rounding` argument (type ?adorn_pct_formatting in the console to learn more). 
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+
+If we want to include the n alongside percentages, we can use `adorn_ns`.
+
+Use the code above and then add a line with `adorn_ns` to include the n.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+
+We can add titles to our crosstabs using `adorn_title`.
+
+Use the code above and then add a title using `adorn_title`. Use the `placement` argument and see what you get.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+
+
+We can also do three (or more) way crosstabs automatically by adding more variables to the `tabyl` function.
+
+Use the code above, but add a third variable (`age_decade`) to the line with `drop_na` and the line with `tabyl`. You should get a series of crosstabs.
+
+```{r}
+# YOUR CODE HERE
+```
 
 

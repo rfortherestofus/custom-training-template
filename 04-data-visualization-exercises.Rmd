@@ -1,6 +1,6 @@
 ---
 title: "Data Visualization Exercises"
-author: "R for the Rest of Us"
+author: "David Keyes // R for the Rest of Us"
 output: 
     html_document:
         css: slides/style.css
@@ -17,13 +17,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load Packages
 
-Let's load the `tidyverse` package. 
+Let's load the packages we need. These include `tidyverse` (especially the `dplyr` package) and `janitor`. 
 
 ```{r}
-library(tidyverse)
+# YOUR CODE HERE
 ```
 
-# Import NHANES Data
+# Import Data
 
 Import your data into a data frame called NHANES. 
 
@@ -72,12 +72,10 @@ Use the v1 approach to make a bar chart that shows a count of the number of peop
 
 ## Bar Chart v2
 
-I've made a new data frame called `sleep_by_gender` that shows the average amount of sleep per night that males and females report getting. 
+Create a new data frame called `sleep_by_gender` that shows the average amount of sleep per night that males and females report getting. Drop any NA (or NaN) responses from this data frame.
 
 ```{r}
-sleep_by_gender <- nhanes %>% 
-  group_by(gender) %>% 
-  summarize(avg_sleep = mean(sleep_hrs_night, na.rm = TRUE)) 
+# YOUR CODE HERE 
 ```
 
 Plot the average amount of sleep per night for males and females.
@@ -86,6 +84,12 @@ Plot the average amount of sleep per night for males and females.
 # YOUR CODE HERE 
 ```
 
+
+Make the same graph as above, but use `geom_col` instead of `geom_bar`.
+
+```{r}
+# YOUR CODE HERE 
+```
 
 
 
@@ -120,14 +124,53 @@ Do nearly the same thing to change the color of the last bar chart you made (the
 # YOUR CODE HERE 
 ```
 
+## x and y axes
+
+Copy the graph you just made and change the y axis so it goes from 0 to 8.
+
+```{r}
+# YOUR CODE HERE 
+```
+
+Copy the last code chunk. Then adjust the breaks on the y axis so that it shows 0 to 8 by 1 (i.e. 0, 1, 2, etc).
+
+```{r}
+# YOUR CODE HERE 
+```
+
+# Text and Labels
+
+Copy your last code chunk. Then do the following:
+
+1. Add text labels to each bar. 
+2. Use the `round` argument to just show one decimal place in each label.
+3. Use the `vjust` argument to have them show up at the inner edge of the bars.
+4. Make the labels all white.
+
+```{r}
+# YOUR CODE HERE 
+```
+
+
+
+Do the same thing as above, but use `geom_label` instead of `geom_text`. Also, do the following:
+
+1. Use the `vjust` argument to have them show up at the outer edge of the bars.
+2. Don't show the legend (hint: you'll have to add code in two places to make this happen).
+
+```{r}
+# YOUR CODE HERE 
+```
+
 
 # Plot Labels
 
-Use the code chunk from above and do the following:
+Use the code chunk from above with `geom_text` (not the last one with `geom_label`). Do the following:
 
 1. Add a title
 2. Add a better y axis label
 3. Remove the x axis label
+4. Remove the legend (hint: use the `show.legend` argument again)
 
 ```{r}
 # YOUR CODE HERE 
@@ -137,10 +180,11 @@ Use the code chunk from above and do the following:
 
 # Themes
 
-Load the [`hrbrthemes` package](https://hrbrmstr.github.io/hrbrthemes/index.html). It's a package that provides some great default themes. I've installed it for you so you just need to load it.
+Load the [`hrbrthemes` package](https://hrbrmstr.github.io/hrbrthemes/index.html). It's a package that provides some great default themes. Install it by uncommenting the first line below.
 
 
 ```{r}
+# install.packages("hrbrthemes", repos = "https://cinc.rud.is")
 library(hrbrthemes)
 ```
 
@@ -152,7 +196,7 @@ Then add the `theme_ipsum` to your plot.
 
 # Facets
 
-I've created a data frame called `sleep_by_gender_by_age` for you. Run the code chunk below to load the data frame and take a look at it.
+I've created a data frame called `sleep_by_gender_by_age` for you. Run the code chunk below to load the data frame.
 
 ```{r}
 sleep_by_gender_by_age <- nhanes %>% 
@@ -161,7 +205,13 @@ sleep_by_gender_by_age <- nhanes %>%
   drop_na()
 ```
 
-Now, see if you can recreate this plot using `facet_wrap` (you can also open it from the plots directory to see it better):
+Let's take a look at `sleep_by_gender_by_age`.
+
+```{r}
+sleep_by_gender_by_age
+```
+
+Now, see if you can recreate this plot. Much of the code will be the same from your previous plots using the `sleep_by_gender` data frame so just make some small changes.
 
 ![](plots/sleep-by-gender-by-age.png)
 
