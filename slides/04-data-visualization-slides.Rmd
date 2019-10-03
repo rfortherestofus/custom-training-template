@@ -1,0 +1,89 @@
+---
+title: "Data Visualization"
+output:
+  xaringan::moon_reader:
+    css: ["style.css", "default"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: 16:9
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = F, 
+                      warning = F,
+                      message = F,
+                      dpi = 300)
+
+library(tidyverse)
+library(skimr)
+library(janitor)
+library(here)
+
+
+```
+
+```{r include = F, eval = T}
+
+# This is just because the presentation file is in a subdirectory so need to actually load it but don't want to confuse folks.
+
+nhanes <- read_csv(here("data/nhanes.csv")) %>% 
+  clean_names()
+
+```
+
+
+class: inverse, center, middle, dk-section-title
+
+# Grammar of Graphics
+
+---
+
+## Grammar of Graphics
+
+
+---
+
+class: middle, center
+
+![](images/nyt-inequality.png)
+
+---
+
+class: middle, center
+
+![](images/nyt-inequality-annotated.png)
+
+---
+
+# ggplot2
+
+.pull-left[
+```{r}
+ggplot(data = inequality_data,
+       mapping = aes(x = year,
+                     y = income_change,
+                     color = group)) +
+  geom_line()
+```
+]
+.pull-right[
+![](images/nyt-inequality.png)
+]
+
+--
+
+*Note: `ggplot` uses the + where `tidyverse` uses the pipe. Make sure you don't flip the two.*
+
+---
+
+class: inverse, center, middle, dk-section-title
+
+The remainder of this section of the course does not use slides. 
+
+See instead [this RMarkdown document](https://github.com/rfortherestofus/fundamentals/blob/master/data-visualization-examples.Rmd) with examples.

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>RMarkdown</title>
+    <meta charset="utf-8" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+    <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# RMarkdown
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="dk-footer"&gt;
+&lt;span&gt;
+&lt;a href="https://rfortherestofus.com/" target="_blank"&gt;R for the Rest of Us
+&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+# RMarkdown Overview
+
+--
+
+Every RMarkdown document has the following:
+
+--
+
+1. **YAML** (one per document)
+
+--
+
+2. **Text** (repeated as many times as necessary)
+
+--
+
+3. **Code chunks** (repeated as many times as necessary)
+
+
+
+---
+
+## RMarkdown Overview
+
+![](images/rmarkdown-overview.png)
+
+---
+
+## Knitting (aka Export)
+
+![](images/knit.gif)
+
+---
+class:inverse
+
+## Your Turn
+
+1. Create a new RMarkdown file, setting the default output format as Word.
+
+1. Save your RMarkdown file as report.Rmd.
+
+1. Look through this RMarkdown file and make sure that you can identify the YAML, text sections, and code chunks.
+
+1. Click the Knit button and open the file that gets produced (report.docx).
+
+
+
+
+---
+
+# YAML
+
+![](images/yaml.png)
+
+---
+
+# YAML
+
+Stands for "YAML Ain't Markup Language" (don't worry about it).
+
+--
+
+Often referred to as "RMarkdown front matter."
+
+--
+
+It is metadata that tells RMarkdown things like title, author, date, output options, etc. 
+
+--
+
+
+```r
+---
+title: "My Super Fancy Report"
+author: "David Keyes"
+output: html_document
+---
+```
+
+---
+
+class: inverse
+
+## Your Turn
+
+1. Go into the YAML and change the title to “My Super Fancy Report.”
+
+1. Remove the line with the date from the YAML.
+
+1. Change the output format to HTML by changing `output: word_document` to `output: html_document`.
+
+1. Knit again and open report.html to make sure your changes show up.
+
+
+
+---
+
+
+# Text
+
+
+
+![](images/text.png)
+
+---
+
+##Text
+
+.pull-left[
+With Markdown text, you write everything as pure text (no clicking a B button to make things bold). 
+]
+
+.pull-right[
+![](images/word-formatting.png)
+]
+
+---
+
+
+class: middle
+
+![](images/markdown-text-to-output.png)
+
+---
+
+## Text
+
+
+.pull-left[
+**Markdown**
+
+```
+Text with **some words in bold** 
+and *some words in italics*
+
+
+```
+
+]
+
+--
+
+.pull-right[
+**Output**
+
+Text with **some words in bold** and *some words in italics*
+
+]
+
+
+---
+
+## Headers
+
+
+.pull-left[
+**Markdown**
+
+```
+
+
+# First-Level Header
+
+## Second-Level Header
+
+### Third-Level Subheader
+
+
+```
+]
+
+--
+
+.pull-right[
+**Output**
+
+# First-Level Header
+
+## Second-Level Header
+
+### Third-Level Subheader
+
+]
+
+
+
+---
+
+
+## Lists
+
+
+.pull-left[
+**Markdown**
+
+```
+
+- Bulleted list item #1
+- Bulleted list item #2
+
+
+1. Numbered list item #1
+1. Numbered list item #2
+```
+]
+
+--
+
+.pull-right[
+**Output**
+
+
+- Bulleted list item #1
+- Bulleted list item #2
+
+
+1. Numbered list item #1
+1. Numbered list item #2
+
+]
+
+
+
+---
+
+class: inverse
+
+## Your Turn
+
+1. Working in your report.Rmd file, above the RMarkdown second-level header, add the following first-level header: "Introduction"
+
+1. Add this text (note the bold and italics) below the introduction header: "This report is the best report ever. Pretty much the **bees' knees**. Can't say that I've *ever* seen a better report."
+
+1. Add the following second-level header: "Reasons Why This Report is the Best"
+
+1. Add the following list of reasons why the report is the best:
+
+    - It's amazing
+    - It's quite amazing
+    - It's seriously amazing
+
+1. Knit again and reopen the report.html file to make sure your changes show up. 
+
+---
+
+
+
+
+# Code Chunks
+
+
+![](images/code-chunk.png)
+
+
+
+---
+
+## Code Chunks
+
+They start with three backticks and {r} and end with three backticks. 
+
+.pull-left[
+
+
+![](images/reunion-map-code-chunk.png)
+]
+
+--
+
+.pull-right[
+
+![](images/reunion-map.png)
+]
+
+
+
+---
+
+## Insert a Code Chunk: Button
+
+![](images/insert-code-chunk-animated.gif)
+
+---
+
+## Insert a Code Chunk: Keyboard Shortcut
+
+
+.pull-left[
+![](images/apple-logo.png)
+
+**Mac**
+
+*command+option+I*
+]
+
+.pull-right[
+![](images/windows-logo.png)
+
+**Windows**
+
+*control+alt+I*
+]
+
+---
+
+## Code Chunk Names
+
+You can (but don't have to) give code chunks names. 
+
+--
+
+.pull-left[
+![](images/code-chunk-names.png)
+]
+
+--
+
+.pull-right[
+![](images/code-chunk-no-name.png)
+]
+
+
+---
+
+## Chunk Options: `echo`
+
+--
+
+Do you want to show (i.e. **echo**) the R code in the knitted report?
+
+![](images/code-chunk-echo.png)
+
+
+
+---
+
+## Chunk Options: `include`
+
+
+Do you want to **include the output** (i.e. the graph or table) that the code produces?
+
+![](images/code-chunk-include.png)
+
+
+---
+
+## More Chunk Options
+
+**Other options** that we won't discuss today:
+
+- **`warning`** (show any warnings that R throws)
+- **`message`** (show any messages that R sends)
+- **`fig.width`** (default figure width)
+- **`fig.height`** (default figure height)
+- and many more ...
+
+
+---
+
+
+## Setup Code Chunk
+
+--
+
+A special code chunk with the text `setup` right after the `r`. 
+
+![](images/setup-code-chunk.png)
+
+--
+
+All chunk options can be set at the **global level** (in the setup code chunk) or at the **chunk level** (for individual chunks).
+
+
+--
+
+Options at the individual chunk level **override** global chunk options.
+
+
+
+---
+
+class: inverse
+
+## Your Turn
+
+1. Change the default chunk options in the setup code chunk so that `echo = FALSE`. Knit your report and notice what is different. 
+
+1. Change the chunk options in the cars code chunk so that `include = FALSE`. Knit your report and notice what is different.
+
+1. Add a new code chunk (don't worry about naming it). In it, load the package `skimr` (hint: use the `library` function). Then, use the `skim` function that you learned about in the Getting Started course to skim the `cars` data frame. Knit your report to see the output. 
+
+
+---
+
+## My Setup Code Chunk
+
+99% of the time, this is what it looks like:
+
+![](images/my-setup-code-chunk.png)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

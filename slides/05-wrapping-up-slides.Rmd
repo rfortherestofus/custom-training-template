@@ -1,0 +1,60 @@
+---
+title: "Wrapping Up"
+author: "R for the Rest of Us"
+output:
+  xaringan::moon_reader:
+    df_print: paged
+    css: ["style.css", "default"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: 16:9
+---
+
+```{r child = "setup.Rmd"}
+```
+
+
+
+```{r packages, include = F, eval = T}
+library(tidyverse)
+library(skimr)
+library(janitor)
+library(DT)
+library(here)
+library(kableExtra)
+library(knitr)
+```
+
+class: center, middle, inverse, dk-section-title
+
+# Where Do You Go From Here?
+
+---
+
+## Check Your Email
+
+Over the next few days, I'll send you resources to help you continue to make progress.
+
+---
+
+## Twitter
+
+[![](images/rstats-twitter.gif)](https://twitter.com/search?q=%23rstats)
+
+---
+
+## R for Data Science Community
+
+[![](images/r4ds-website.png)](https://www.rfordatasci.com/)
+
+
+---
+
+## Google
+
+[![](images/programming-google.png)](https://twitter.com/ekaleedmiston/status/1081221822186696706)
+
+

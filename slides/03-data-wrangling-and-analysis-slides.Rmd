@@ -1,0 +1,175 @@
+---
+title: "Data Wrangling and Analysis"
+output:
+  xaringan::moon_reader:
+    css: ["style.css", "default"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: 16:9
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = F, 
+                      warning = F,
+                      message = F)
+
+library(tidyverse)
+library(skimr)
+library(janitor)
+library(here)
+library(kableExtra)
+
+
+```
+
+
+
+```{r include = F, eval = T}
+
+# This is just because the presentation file is in a subdirectory so need to actually load it but don't want to confuse folks.
+
+nhanes <- read_csv(here("data/nhanes.csv")) %>% 
+  clean_names()
+
+```
+
+
+
+## NHANES
+
+.pull-left[
+*"The National Health and Nutrition Examination Survey (NHANES) is a program of studies designed to assess the health and nutritional status of adults and children in the United States. The survey is unique in that it combines interviews and physical examinations."*
+]
+
+.pull-right[
+![](images/nhanes.jpg)
+]
+
+???
+
+Website: https://www.cdc.gov/nchs/nhanes/index.htm
+
+Video: https://www.youtube.com/watch?v=GmnN2r5J0YA
+
+R package: https://cran.r-project.org/web/packages/NHANES/index.html
+
+
+
+
+
+---
+
+class: inverse, center, middle, dk-section-title
+
+# The tidyverse
+
+---
+
+## Base R Syntax
+
+
+--
+
+```{r}
+table(nhanes$education,
+      nhanes$phys_active)
+```
+
+--
+
+- Starts with function, data frame in parentheses
+
+--
+
+- Uses dollar sign notation (data_frame$variable)
+
+--
+
+- Requires repeating data frame name each time you call it
+
+---
+
+
+## Tidyverse Syntax
+
+
+
+```{r}
+nhanes %>% 
+  tabyl(education, phys_active)
+
+```
+
+--
+
+- "data frame first, data frame once" - [Alison Hill](https://ohsu-conj620.netlify.com/slides/cm012.html#20)
+
+--
+
+- Uses the pipe (%>%) to chain together a series of functions
+
+
+
+---
+
+class: center, middle
+
+## The pipe
+
+![](images/pipe.png)
+
+---
+
+### The pipe
+
+Using the pipe, we can start with a data frame and then conduct a series of functions all at once. Read each pipe as "then."
+
+```{r}
+nhanes %>% 
+  filter(survey_yr == "2009_10") %>% 
+  group_by(education) %>% 
+  summarize(mean_bmi = mean(bmi, na.rm = TRUE))
+
+```
+
+--
+
+*Keyboard shortcut to add a pipe: command-shift-M (Mac) or control-shift-M (Windows).*
+
+
+
+
+
+
+---
+
+class:inverse
+
+### Your Turn
+
+
+1. Open the 03-data-wrangling-and-analysis-exercises.Rmd file
+
+--
+
+1. Load the `tidyverse` package
+
+--
+
+1. Import NHANES data to a data frame called `nhanes`
+
+
+
+
+---
+
+## Data Wrangling and Analysis Verbs
+
+![](images/dplyr-verbs.png)
+
