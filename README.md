@@ -1,3 +1,3 @@
-# Introduction to R 
+# Custom Training Template
 
-This repo contains all the material for [Introduction to R Workshops](https://rfortherestofus.com/workshops/).
+This repo contains materials for [custom training](https://rfortherestofus.com/custom-training/) Introduction to R sessions. 
