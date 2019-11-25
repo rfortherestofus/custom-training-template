@@ -467,7 +467,7 @@ female_height_by_age <- nhanes %>%
 
 
 ```{r}
-female_height_inches_by_age
+female_height_by_age
 ```
 
 # Crosstabs
