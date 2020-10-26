@@ -450,6 +450,7 @@ nhanes %>%
   group_by(age_decade) %>% 
   summarize(mean_height_inches = mean(height_inches,
                                     na.rm = TRUE)) 
+
 ```
 
 This assigns that output to a new data frame.
