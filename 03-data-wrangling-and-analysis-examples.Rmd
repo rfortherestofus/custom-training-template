@@ -375,7 +375,7 @@ nhanes %>%
                                     na.rm = TRUE))
 ```
 
-We can use `group_by` with multiple groups. Let's calculate the mean number of active days for each year the survey was done and for gender.
+We can use `group_by` with multiple groups. Let's calculate the mean number of active days for each year the survey was done and for smoking status.
 
 ```{r}
 nhanes %>% 

@@ -212,7 +212,7 @@ ggplot(data = nhanes,
   geom_point()
 ```
 
-Note that each option in the gender variable (smoker and non-smoker) is mapped to a color (smoker = teal, non-smoker = red).
+Note that each option in the smoke_now variable (smoker and non-smoker) is mapped to a color (smoker = teal, non-smoker = red).
 
 ![](slides/images//grammar-of-graphics-color-mapping-example.png)
 
