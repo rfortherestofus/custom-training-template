@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Data Wrangling and Analysis</title>
+    <title>Welcome</title>
     <meta charset="utf-8" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+    <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
     <link rel="stylesheet" href="style.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Data Wrangling and Analysis
+# Welcome
 
 ---
 
@@ -18,144 +20,119 @@ class: center, middle, inverse, title-slide
 
 
 
+layout: true
+  
+&lt;div class="dk-footer"&gt;
+&lt;span&gt;
+&lt;a href="https://rfortherestofus.com/" target="_blank"&gt;R for the Rest of Us
+&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+class: center, middle, dk-section-title
+
+# Welcome
+
+---
+
+# Introductions
+
+1. Name 
+
+--
+
+1. Role
+
+--
+
+1. Pronouns
+
+--
+
+1. Experience with R
+
+--
+
+1. Thing you're most scared of with R (if anything)
+
+--
+
+1. Thing you're most excited about with R
+
+---
+
+# Logistics
 
 
+---
 
+## Exercises
 
-
-
-
-
-## NHANES
+--
 
 .pull-left[
-*"The National Health and Nutrition Examination Survey (NHANES) is a program of studies designed to assess the health and nutritional status of adults and children in the United States. The survey is unique in that it combines interviews and physical examinations."*
+.sticky-good[
+Done?
+
+![](images/zoom-yes.png)
+
 ]
+]
+
 
 .pull-right[
-![](images/nhanes.jpg)
+.sticky-good[
+Stuck?
+
+![](images/zoom-no.png)
+]
 ]
 
+
+---
+
+
+
+## This is Hard and That's Ok
+
+--
+
+&lt;p class="large"&gt;It’s easy when you start out programming to get really frustrated and think, “Oh it’s me, I’m really stupid,” or, “I’m not made out to program.”&lt;/p&gt; 
+
+--
+
+&lt;p class="large"&gt;But, that is absolutely not the case. Everyone gets frustrated. I still get frustrated occasionally when writing R code. It’s just a natural part of programming. So, it happens to everyone and gets less and less over time.&lt;/p&gt;
+
+--
+
+&lt;p class="large"&gt;Don’t blame yourself. Just take a break, do something fun, and then come back and try again later.&lt;/p&gt;
+
+---
+
+class: center, middle, dk-section-title
+
+background-image: url("images/hadley-wickham.jpg")
+
 ???
-
-Website: https://www.cdc.gov/nchs/nhanes/index.htm
-
-Video: https://www.youtube.com/watch?v=GmnN2r5J0YA
-
-R package: https://cran.r-project.org/web/packages/NHANES/index.html
-
-
-
-
+Source: (https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/) 
 
 ---
 
-class: inverse, center, middle, dk-section-title
+# Agenda
 
-# The tidyverse
+**Session #1**
 
----
+RMarkdown
 
-## Base R Syntax
+Data Wrangling and Analysis
 
+**Session #2**
 
---
+Data Wrangling and Analysis
 
-
-```r
-table(nhanes$education,
-      nhanes$phys_active)
-```
-
---
-
-- Starts with function, data frame in parentheses
-
---
-
-- Uses dollar sign notation (data_frame$variable)
-
---
-
-- Requires repeating data frame name each time you call it
-
----
-
-
-## Tidyverse Syntax
-
-
-
-
-```r
-nhanes %&gt;% 
-  tabyl(education, phys_active)
-```
-
---
-
-- "data frame first, data frame once" - [Alison Hill](https://ohsu-conj620.netlify.com/slides/cm012.html#20)
-
---
-
-- Uses the pipe (%&gt;%) to chain together a series of functions
-
-
-
----
-
-class: center, middle
-
-## The pipe
-
-![](images/pipe.png)
-
----
-
-### The pipe
-
-Using the pipe, we can start with a data frame and then conduct a series of functions all at once. Read each pipe as "then."
-
-
-```r
-nhanes %&gt;% 
-  filter(survey_yr == "2009_10") %&gt;% 
-  group_by(education) %&gt;% 
-  summarize(mean_bmi = mean(bmi, na.rm = TRUE))
-```
-
---
-
-*Keyboard shortcut to add a pipe: command-shift-M (Mac) or control-shift-M (Windows).*
-
-
-
-
-
-
----
-
-class:inverse
-
-### Your Turn
-
-
-1. Open the 03-data-wrangling-and-analysis-exercises.Rmd file
-
---
-
-1. Load the `tidyverse` package
-
---
-
-1. Import NHANES data to a data frame called `nhanes`
-
-
----
-
-## Data Wrangling and Analysis Verbs
-
-![](images/dplyr-verbs.png)
+Data Visualization
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -103,7 +103,6 @@ table(nhanes$education,
 ```{r}
 nhanes %>% 
   tabyl(education, phys_active)
-
 ```
 
 --
@@ -163,8 +162,6 @@ class:inverse
 --
 
 1. Import NHANES data to a data frame called `nhanes`
-
-
 
 
 ---

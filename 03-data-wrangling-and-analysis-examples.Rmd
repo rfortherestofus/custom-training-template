@@ -155,7 +155,6 @@ We can use `mutate` in three ways:
 Create a **new variable with a specific value**
 
 ```{r}
-# Make country variable
 nhanes %>% 
   mutate(country = "United States") %>% 
   select(country)
@@ -227,8 +226,8 @@ We use `==` to filter all observations that meet the criteria.
 
 ```{r}
 nhanes %>% 
-  filter(gender == "female") %>% 
-  select(gender)
+  filter(smoke_now == "Yes") %>% 
+  select(smoke_now)
 ```
 
 We use `!=` to select all observations that don't meet the criteria.
@@ -262,15 +261,15 @@ We can chain together multiple `filter` functions. Doing it this way, we don't h
 
 ```{r}
 nhanes %>% 
-  filter(gender == "male" & (health_gen == "Good" | health_gen == "Vgood" | health_gen == "Excellent")) %>%
-  select(gender, health_gen)
+  filter(smoke_now == "Yes" & (health_gen == "Good" | health_gen == "Vgood" | health_gen == "Excellent")) %>%
+  select(smoke_now, health_gen)
 ```
 
 ```{r}
 nhanes %>% 
-  filter(gender == "male") %>%
+  filter(smoke_now == "Yes") %>%
   filter(health_gen %in% c("Good", "Vgood", "Excellent")) %>%
-  select(gender, health_gen)
+  select(smoke_now, health_gen)
 ```
 
 
@@ -380,7 +379,7 @@ We can use `group_by` with multiple groups. Let's calculate the mean number of a
 
 ```{r}
 nhanes %>% 
-  group_by(survey_yr, gender, education) %>% 
+  group_by(survey_yr, smoke_now, education) %>% 
   summarize(mean_active_days = mean(phys_active_days,
                                     na.rm = TRUE))
 ```
@@ -400,8 +399,8 @@ We can also count by multiple groups.
 
 ```{r}
 nhanes %>% 
-  count(age_decade, gender) %>% 
-  drop_na(age_decade)
+  count(age_decade, smoke_now) %>% 
+  drop_na(age_decade, smoke_now)
 ```
 
 
@@ -427,10 +426,10 @@ We often use `arrange` at the end of chains to display things in order.
 
 ```{r}
 nhanes %>% 
-  group_by(gender, age_decade) %>%
+  group_by(smoke_now, age_decade) %>%
   summarize(mean_active_days = mean(phys_active_days,
                                     na.rm = TRUE)) %>% 
-  drop_na(age_decade) %>% 
+  drop_na(age_decade, smoke_now) %>% 
   arrange(desc(mean_active_days))
 ```
 
@@ -446,7 +445,7 @@ This just displays the output:
 
 ```{r}
 nhanes %>% 
-  filter(gender == "female") %>% 
+  filter(smoke_now == "Yes") %>% 
   mutate(height_inches = height / 2.54) %>% 
   group_by(age_decade) %>% 
   summarize(mean_height_inches = mean(height_inches,
@@ -456,8 +455,8 @@ nhanes %>%
 This assigns that output to a new data frame.
 
 ```{r}
-female_height_by_age <- nhanes %>% 
-  filter(gender == "female") %>% 
+height_by_age_smokers <- nhanes %>% 
+  filter(smoke_now == "Yes") %>% 
   mutate(height_inches = height / 2.54) %>% 
   group_by(age_decade) %>% 
   summarize(mean_height_inches = mean(height_inches,
@@ -467,7 +466,7 @@ female_height_by_age <- nhanes %>%
 
 
 ```{r}
-female_height_inches_by_age
+height_by_age_smokers
 ```
 
 # Crosstabs
@@ -483,7 +482,7 @@ To do a crosstab, you just add another variable.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) 
+  tabyl(age_decade, smoke_now) 
 ```
 
 
@@ -491,7 +490,7 @@ nhanes %>%
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) %>% 
+  tabyl(age_decade, smoke_now) %>% 
   adorn_totals(where = c("row", "col"))
 ```
 
@@ -501,7 +500,7 @@ We can add `adorn_percentages` to add percentages.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) %>% 
+  tabyl(age_decade, smoke_now) %>% 
   adorn_totals(where = c("row", "col")) %>% 
   adorn_percentages()
 ```
@@ -512,7 +511,7 @@ We can then format these percentages using `adorn_pct_formatting`.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) %>% 
+  tabyl(age_decade, smoke_now) %>% 
   adorn_totals(where = c("row", "col")) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting(digits = 0,
@@ -525,7 +524,7 @@ If we want to include the n alongside percentages, we can use `adorn_ns`.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) %>% 
+  tabyl(age_decade, smoke_now) %>% 
   adorn_totals(c("row", "col")) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting(digits = 0,
@@ -539,7 +538,7 @@ We can add titles to our crosstabs using `adorn_title`.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender) %>% 
+  tabyl(age_decade, smoke_now) %>% 
   adorn_totals(c("row", "col")) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting() %>% 
@@ -548,13 +547,11 @@ nhanes %>%
 ```
 
 
-
-
 We can also do three (or more) way crosstabs automatically by adding more variables to the `tabyl` function.
 
 ```{r}
 nhanes %>% 
-  tabyl(age_decade, gender, education) %>% 
+  tabyl(age_decade, smoke_now, education) %>% 
   adorn_totals(c("row", "col")) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting() %>% 

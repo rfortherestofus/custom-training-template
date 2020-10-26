@@ -150,15 +150,15 @@ Here's what's going on.
 
 It's often easier to do our analysis work, save a data frame, and then use this to plot.
 
-Let's recreate our `female_height_inches_by_age` data frame. Note that I am using the `drop_na` function to, well, drop NA values.
+Let's recreate our `height_by_age_smokers` data frame. Note that I am using the `drop_na` function to, well, drop NA values.
 
 ```{r}
-female_height_inches_by_age <- nhanes %>% 
-  filter(gender == "female") %>% 
+height_by_age_smokers <- nhanes %>% 
+  filter(smoke_now == "Yes") %>% 
   mutate(height_inches = height / 2.54) %>% 
   group_by(age_decade) %>% 
-  summarize(height_inches = mean(height_inches,
-                                 na.rm = TRUE)) %>% 
+  summarize(mean_height_inches = mean(height_inches,
+                                    na.rm = TRUE)) %>% 
   drop_na(age_decade)
 ```
 
@@ -167,9 +167,9 @@ female_height_inches_by_age <- nhanes %>%
 Then let's use this data frame to make a bar chart. The `stat = "identity"` here tells ggplot to use the exact data points without any `stat` transformations.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches)) +
   geom_bar(stat = "identity") 
 ```
 
@@ -179,10 +179,9 @@ ggplot(data = female_height_inches_by_age,
 We can also flip the x and y axes using `coord_flip`. 
 
 ```{r}
-
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches)) +
   geom_bar(stat = "identity") +
   coord_flip()
 
@@ -192,9 +191,9 @@ ggplot(data = female_height_inches_by_age,
 We can also use `geom_col`, which uses `stat = "identity"` by default.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches)) +
   geom_col() +
   coord_flip()
 ```
@@ -203,38 +202,40 @@ ggplot(data = female_height_inches_by_age,
 
 ## color
 
-We add the color argument *within* the `aes` so that the data in that variable is mapped to those aesthetic properties. Let's add different colors for males and males to our previous scatterplot.
+We add the color argument *within* the `aes` so that the data in that variable is mapped to those aesthetic properties. Let's add different colors for smokers and non-smokers to our previous scatterplot.
 
 ```{r}
 ggplot(data = nhanes,
        mapping = aes(x = age,
                      y = height,
-                     color = gender)) + 
+                     color = smoke_now)) + 
   geom_point()
 ```
 
-Note that each option in the gender variable (male and female) is mapped to a color (male = teal, female = red).
+Note that each option in the gender variable (smoker and non-smoker) is mapped to a color (smoker = teal, non-smoker = red).
 
 ![](slides/images//grammar-of-graphics-color-mapping-example.png)
 
 Let's try the same thing with our last bar chart. 
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
+                     y = mean_height_inches,
                      color = age_decade)) +
-  geom_bar(stat = "identity") 
+  geom_bar(stat = "identity") +
+  coord_flip()
 ```
 
 That didn't work! Let's try `fill` instead.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
+                     y = mean_height_inches,
                      fill = age_decade)) +
-  geom_bar(stat = "identity") 
+  geom_bar(stat = "identity") +
+  coord_flip()
 ```
 
 
@@ -254,7 +255,7 @@ We can change which colors the data is mapped to by using a `scale_` function.
 ggplot(data = nhanes,
        mapping = aes(x = age,
                      y = height,
-                     color = gender)) + 
+                     color = smoke_now)) + 
   geom_point() +
   scale_color_manual(values = c("purple", "orange")) 
 ```
@@ -265,7 +266,7 @@ We can also use built-in palettes like `scale_color_viridis_d` (the d means it's
 ggplot(data = nhanes,
        mapping = aes(x = age,
                      y = height,
-                     color = gender)) + 
+                     color = smoke_now)) + 
   geom_point() +
   scale_color_viridis_d()
 ```
@@ -281,20 +282,22 @@ We adjust our x and y axes using the `scale_` set of functions. Which exact func
 The `limits` argument sets the minimum and maximum values that display.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
-  geom_col() +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(limits = c(0, 75))
 ```
 
 The `breaks` argument determines which axis labels show up.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
-  geom_col() +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75))
 ```
@@ -302,15 +305,14 @@ ggplot(data = female_height_inches_by_age,
 If we want to change the x axis labels, we'd need to use `scale_x_discrete` because that data is categorical. I'm adding a `coord_flip` here to make it easier to read.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
-  geom_col() +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
+  geom_bar(stat = "identity") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  scale_x_discrete(labels = c("Zero to Nine", 
-                              "Ten to Nineteen",
-                              "Twenty to Twenty-Nine",
+  scale_x_discrete(labels = c("Twenty to Twenty-Nine",
                               "Thirty to Thirty-Nine",
                               "Forty to Forty-Nine",
                               "Fifty to Fifty-Nine",
@@ -326,25 +328,27 @@ Text is just another geom. For example, we use `geom_text` to add labels to our 
 
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
-  geom_text(aes(label = height_inches))
+  geom_text(aes(label = mean_height_inches))
 ```
 
 Let's add a new variable called `height_inches_one_digit` to use for plotting.
 
 ```{r}
-female_height_inches_by_age <- female_height_inches_by_age %>% 
-  mutate(height_inches_one_digit = round(height_inches, 1))
+height_by_age_smokers <- height_by_age_smokers %>% 
+  mutate(height_inches_one_digit = round(mean_height_inches, 1))
 ```
 
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = height_inches_one_digit))
 ```
@@ -354,9 +358,10 @@ We can use the `hjust` and `vjust` argumments to horizontally and vertically adj
 `vjust = 0` puts the labels on the outer edge of the bars.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = height_inches_one_digit),
             vjust = 0)
@@ -365,20 +370,22 @@ ggplot(data = female_height_inches_by_age,
 `vjust = 1` puts the labels at the inner edge of the bars.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = height_inches_one_digit),
-            vjust = 1) 
+            vjust = 1)
 ```
 
 I often do something like `vjust = 1.5` to give a bit more padding. 
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = height_inches_one_digit),
             vjust = 1.5)
@@ -387,9 +394,10 @@ ggplot(data = female_height_inches_by_age,
 We can adjust the color of the text using the `color` argument. We're putting it outside of the `aes` because we are setting it for the whole layer.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = height_inches_one_digit),
             vjust = 1.5,
@@ -399,14 +407,15 @@ ggplot(data = female_height_inches_by_age,
 `geom_label` is nearly identical but it adds a background. With `geom_label` the `color` argument determines the text color while the fill is the background color.
 
 ```{r}
-ggplot(data = female_height_inches_by_age, 
+ggplot(data = height_by_age_smokers, 
        mapping = aes(x = age_decade, 
-                     y = height_inches)) +
+                     y = mean_height_inches,
+                     fill = age_decade)) +
   geom_bar(stat = "identity") +
   geom_label(aes(label = height_inches_one_digit),
-             vjust = 1.5,
-             fill = "white",
-             color = "blue")
+            vjust = 1.5,
+            fill = "black",
+            color = "white")
 ```
 
 
@@ -415,37 +424,37 @@ ggplot(data = female_height_inches_by_age,
 Let's start by making a slightly more complicated bar chart. We'll start by making a new data frame.
 
 ```{r}
-height_inches_by_age <- nhanes %>% 
+height_inches_by_age_and_smoking_status <- nhanes %>% 
   mutate(height_inches = height / 2.54) %>% 
-  group_by(age_decade, gender) %>% 
-  summarize(height_inches = mean(height_inches,
+  group_by(age_decade, smoke_now) %>% 
+  summarize(mean_height_inches = mean(height_inches,
                                  na.rm = TRUE)) %>% 
-  drop_na(age_decade)
+  drop_na(age_decade, smoke_now)
 ```
 
 Then let's take a look at our new data frame.
 
 ```{r}
-height_inches_by_age
+height_inches_by_age_and_smoking_status
 ```
 
 Now let's plot this data frame using a bar chart.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col() 
 ```
 
 The bars are stacked by default. To put them side by side, we use the `position = "dodge"` argument within the `geom_col`.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") 
 ```
 
@@ -454,28 +463,28 @@ To add labels to our plot, we use `labs`.
 We can a title to the plot with the `title` argument.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages") 
+  labs(title = "Smokers and non-smokers are about the same height") 
 ```
 
 We can add a `subtitle` as well.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9")
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here") 
 ```
 
 
@@ -484,15 +493,15 @@ ggplot(data = height_inches_by_age,
 We can change the x and y axis labels using the `x` and `y` arguments.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches")
 ```
@@ -500,18 +509,18 @@ ggplot(data = height_inches_by_age,
 To change the title above the legend, we use the name of the aesthetic that is being shown.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "")
+       fill = "Smoking Status")
 ```
 
 # Themes
@@ -519,18 +528,18 @@ ggplot(data = height_inches_by_age,
 To add a theme to a plot, we use the `theme_` set of functions. There are several built-in themes. For instance, `theme_minimal`.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_minimal() 
 ```
 
@@ -538,18 +547,18 @@ ggplot(data = height_inches_by_age,
 There's also `theme_light`.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_light()
 ```
 
@@ -565,18 +574,18 @@ library(ggthemes)
 We can then use a theme from this package (`theme_economist`) to make our plots look like those in the Economist.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_economist()
 ```
 
@@ -584,18 +593,18 @@ ggplot(data = height_inches_by_age,
 Another option is `theme_gdocs()`, which makes your plots look like those made in Google Sheets.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_gdocs() 
 ```
 
@@ -606,40 +615,40 @@ ggplot(data = height_inches_by_age,
 One of the most powerful features of ggplot is facetting. You can make small multiples by adding just a line of code using the `facet_wrap` function. 
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge") +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_economist() +
-  facet_wrap(~gender)
+  facet_wrap(~smoke_now)
 ```
 
 Let's drop the legend since it's redundant at this point. We do this by adding the `show.legend = FALSE` argument within `geom_col`.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
   geom_col(position = "dodge",
            show.legend = FALSE) +
   scale_y_continuous(limits = c(0, 75),
                      breaks = c(0, 25, 50, 75)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_economist() +
-  facet_wrap(~gender)
+  facet_wrap(~smoke_now)
 ```
 
 
@@ -649,10 +658,9 @@ We can do this for any type of figure. Recall our scatterplot from before (with 
 ggplot(data = nhanes,
        mapping = aes(x = age,
                      y = height,
-                     color = gender)) +
+                     color = smoke_now)) + 
   geom_point() +
-  theme_economist() +
-  facet_wrap(~gender)
+  facet_wrap(~smoke_now)
 ```
 
 
@@ -662,10 +670,10 @@ Or our histogram.
 ```{r}
 ggplot(data = nhanes, 
        mapping = aes(x = height,
-                     fill = gender)) +
+                     fill = smoke_now)) +
   geom_histogram() +
   theme_economist() +
-  facet_wrap(~gender)
+  facet_wrap(~smoke_now)
 ```
 
 You can use `facet_wrap` for as many groups as you have in your data.
@@ -673,7 +681,7 @@ You can use `facet_wrap` for as many groups as you have in your data.
 ```{r}
 ggplot(data = nhanes,
        mapping = aes(x = age,
-                     y = bmi)) +
+                     y = height)) +
   geom_point() +
   theme_economist() +
   facet_wrap(~education)
@@ -690,27 +698,26 @@ If you do need to save an individual plot for some other purpose (e.g. putting i
 First, we plot.
 
 ```{r}
-ggplot(data = height_inches_by_age, 
+ggplot(data = height_inches_by_age_and_smoking_status, 
        mapping = aes(x = age_decade, 
-                     y = height_inches,
-                     fill = gender)) +
-  geom_col(position = "dodge",
-           show.legend = FALSE) +
-  scale_y_continuous(limits = c(0, 70),
-                     breaks = c(0, 10, 20, 30, 40, 50, 60, 70)) +
-  labs(title = "Males are taller than females at almost all ages",
-       subtitle = "But not at 0-9",
+                     y = mean_height_inches,
+                     fill = smoke_now)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(limits = c(0, 75),
+                     breaks = c(0, 25, 50, 75)) +
+  labs(title = "Smokers and non-smokers are about the same height",
+       subtitle = "Text of my subtitle goes here",
        x = "Age",
        y = "Height in Inches",
-       fill = "") +
+       fill = "Smoking Status") +
   theme_economist() +
-  facet_wrap(~gender)
+  facet_wrap(~smoke_now)
 ```
 
 And then we save this plot.
 
 ```{r}
-ggsave(filename = "plots/age-height.png",
+ggsave(filename = "plots/age-height-by-smoking-status.png",
        height = 8,
        width = 11,
        units = "in",
@@ -720,7 +727,7 @@ ggsave(filename = "plots/age-height.png",
 We can save our plot to other formats as well. PDF is a great option because it produces small file sizes and high-quality plots. You don't need to list dpi here as PDFs are [vector based](https://www.stickermule.com/blog/raster-vs-vector-images).
 
 ```{r}
-ggsave(filename = "plots/age-height.pdf",
+ggsave(filename = "plots/age-height-by-smoking-status.pdf",
        height = 8,
        width = 11)
 ```

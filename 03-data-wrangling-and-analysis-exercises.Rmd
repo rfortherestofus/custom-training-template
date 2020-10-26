@@ -1,6 +1,6 @@
 ---
 title: "Data Wrangling and Analysis Exercises"
-author: "R for the Rest of Us"
+author: "David Keyes // R for the Rest of Us"
 output: 
     html_document:
         css: slides/style.css

@@ -16,6 +16,53 @@ output:
 ```
 
 
+class: inverse, center, middle, dk-section-title
+
+# Why RMarkdown?
+
+
+---
+
+## Why RMarkdown?
+
+--
+
+![](images/non-r-workflow.png)
+
+???
+
+Problems: 
+- What if data changes? 
+- What if you need to produce reports for 10 sites?
+- What if you need to redo report next year? 
+
+---
+
+## RMarkdown
+
+--
+
+![](images/rmarkdown-to-word.png)
+
+???
+
+Combine text and code to produce reports
+
+
+---
+
+class: center, middle
+
+<div class="dk-quote">
+[A]ll the work is done up front and then for every session ... <b>I only need to spend 15 minutes generating the report and sending it to them</b>.
+</div>
+
+[Using R for Immediate Reporting in Evaluation by Dana Wanzer](https://danawanzer.com/using-r-for-immediate-reporting-in-evaluation/)
+
+
+---
+
+
 # RMarkdown Overview
 
 --

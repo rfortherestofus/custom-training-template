@@ -1,0 +1,125 @@
+---
+title: "Welcome"
+output:
+  xaringan::moon_reader:
+    df_print: paged
+    css: ["style.css", "default"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: 16:9
+---
+
+```{r child = "setup.Rmd"}
+```
+
+class: center, middle, dk-section-title
+
+# Welcome
+
+---
+
+# Introductions
+
+1. Name 
+
+--
+
+1. Role
+
+--
+
+1. Pronouns
+
+--
+
+1. Experience with R
+
+--
+
+1. Thing you're most scared of with R (if anything)
+
+--
+
+1. Thing you're most excited about with R
+
+---
+
+# Logistics
+
+
+---
+
+## Exercises
+
+--
+
+.pull-left[
+.sticky-good[
+Done?
+
+![](images/zoom-yes.png)
+
+]
+]
+
+
+.pull-right[
+.sticky-good[
+Stuck?
+
+![](images/zoom-no.png)
+]
+]
+
+
+---
+
+
+
+## This is Hard and That's Ok
+
+--
+
+<p class="large">It’s easy when you start out programming to get really frustrated and think, “Oh it’s me, I’m really stupid,” or, “I’m not made out to program.”</p> 
+
+--
+
+<p class="large">But, that is absolutely not the case. Everyone gets frustrated. I still get frustrated occasionally when writing R code. It’s just a natural part of programming. So, it happens to everyone and gets less and less over time.</p>
+
+--
+
+<p class="large">Don’t blame yourself. Just take a break, do something fun, and then come back and try again later.</p>
+
+---
+
+class: center, middle, dk-section-title
+
+background-image: url("images/hadley-wickham.jpg")
+
+???
+Source: (https://r-posts.com/advice-to-young-and-old-programmers-a-conversation-with-hadley-wickham/) 
+
+---
+
+# Agenda
+
+**Session #1**
+
+RMarkdown
+
+Data Wrangling and Analysis
+
+**Session #2**
+
+Data Wrangling and Analysis
+
+Data Visualization
+
+
+
+
+
+

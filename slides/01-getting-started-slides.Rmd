@@ -1,5 +1,5 @@
 ---
-title: "Introduction to R Workshop"
+title: "Introduction to R"
 author: "R for the Rest of Us"
 output:
   xaringan::moon_reader:
